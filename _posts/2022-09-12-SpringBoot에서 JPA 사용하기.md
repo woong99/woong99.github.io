@@ -171,6 +171,17 @@ public class MemberService {
     public List<Member> findAll() {
         return memberRepository.findAll();
     }
+
+    public Member update(Long id, String name, int age) {
+        Optional<Member> member = memberRepository.findById(id);
+        if (member.isPresent()) {
+            Member selectMember = member.get();
+            selectMember.setName(name);
+            selectMember.setAge(age);
+            return memberRepository.save(selectMember);
+        }
+        return null;
+    }
 }
 ```
 
@@ -224,5 +235,9 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PutMapping()
+    public ResponseEntity<Member> updateMember(@RequestParam Long id, @RequestParam String name, @RequestParam int age) {
+        return new ResponseEntity<>(memberService.update(id, name, age), HttpStatus.OK);
+    }
 }
 ```
